@@ -1,4 +1,4 @@
-import GameControl, os, sys
+import GameControl, os, sys, Test
 
 #Точка входа программы
 def main():

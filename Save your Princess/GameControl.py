@@ -122,7 +122,6 @@ class Hero(Object):
         self.name = name
         self.locations = list()
         
-        
         self.weapon = 1
         self.xpweapon = 25
 
@@ -313,7 +312,7 @@ class GameControl:
         if (mode == 0): #Новая игра
             self.currentHero = Hero(input('Введите имя героя: '))
             self.currentLocation = Location()
-            self.currentHero.position = self.currentLocation.setLocation(6)
+            self.currentHero.position = self.currentLocation.setLocation(0)
             self.currentHero.locations.extend(['0', '1', '2', '3', '5', '7', '8'])
             self.models.SetHeroModel(self.currentHero.soul)
             self.models.SetLocationModel(self.currentLocation.id)
