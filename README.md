@@ -22,4 +22,4 @@ Gameplay:
 
 Good Luck!
 
-p.s. There's a cheat code to defeat all the creatures instantly, just press 0
+p.s. There's a cheat code to defeat all the creatures instantly, just press 0 while fighting
