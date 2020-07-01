@@ -72,7 +72,7 @@ And finally, we fight Light-Soul
 
 After defeating two of them, the central location is open for us, we can go there and defeat Gray-Soul.
 
-After defeating Gray-Soul the only location is left is the princess, Soul-King and you.
+After defeating Gray-Soul the only thing that is left is the princess, Soul-King and you (and random encounters).
 
 > The game isn't balanced well, so this final fight (if you're playing without cheats) is a tough one
 
