@@ -1,13 +1,15 @@
 import pygame
 
+
 class Bullet:
     def __init__(self):
         self.coords = (0, 250)
         self.speed = 5
     pass
 
+
 def Start():
-    pygame.init();
+    pygame.init()
     screen = pygame.display.set_mode((500, 500))
     running = True
 
@@ -23,7 +25,8 @@ def Start():
                 bullets.append(Bullet())
 
         for event in pygame.event.get():
-            if (event.type == pygame.QUIT): running = False
+            if (event.type == pygame.QUIT):
+                running = False
             pass
         for bullet in bullets:
             bullet.coords = (bullet.coords[0] + bullet.speed, bullet.coords[1])
