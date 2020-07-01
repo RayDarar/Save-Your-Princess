@@ -3,6 +3,7 @@ import pickle
 import os
 import random
 import copy
+import platform
 
 
 class Location:
@@ -148,6 +149,7 @@ class Hero(BasePlayer):
         self.maxHealth = self.health
         self.coolDown = 0
         self.currentXP = 0
+        self.isAlive = True
         pass
     pass
 
@@ -161,6 +163,7 @@ class LightSoul(BasePlayer):
         self.damage = 35
         self.health = 850
         self.maxHealth = self.health
+        self.isAlive = True
     pass
 
 
@@ -173,6 +176,7 @@ class DarkSoul(BasePlayer):
         self.damage = 62
         self.health = 600
         self.maxHealth = self.health
+        self.isAlive = True
     pass
 
 
@@ -185,6 +189,7 @@ class GraySoul(BasePlayer):
         self.armor = 30
         self.health = 1500
         self.maxHealth = self.health
+        self.isAlive = True
     pass
 
 
@@ -197,6 +202,7 @@ class SoulKing(BasePlayer):
         self.health = 3500
         self.position = (9, 5)
         self.maxHealth = self.health
+        self.isAlive = True
     pass
 
 
@@ -204,10 +210,10 @@ class Models:
     def __init__(self):
         self.heroModel = None
         self.locationModel = None
-        self.soulModel = pygame.image.load('../Assets/Sprites/Soul King.png')
-        self.grayModel = pygame.image.load('../Assets/Sprites/Gray Soul.png')
-        self.darkModel = pygame.image.load('../Assets/Sprites/Dark Soul.png')
-        self.lightModel = pygame.image.load('../Assets/Sprites/Light Soul.png')
+        self.soulModel = pygame.image.load('Assets/Sprites/Soul King.png')
+        self.grayModel = pygame.image.load('Assets/Sprites/Gray Soul.png')
+        self.darkModel = pygame.image.load('Assets/Sprites/Dark Soul.png')
+        self.lightModel = pygame.image.load('Assets/Sprites/Light Soul.png')
         self.enemyModel = None
         pass
 
@@ -317,7 +323,7 @@ class GameControl:
         pass
 
     def setGameMode(self, mode):
-        if (mode == 0):  # Новая игра
+        if (mode == 0):
             self.currentHero = Hero(input('Enter the hero name: '))
             self.currentLocation = Location()
             self.currentHero.position = self.currentLocation.setLocation(0)
@@ -361,14 +367,14 @@ class GameControl:
                         self.currentHero.position)
                     self.models.SetLocationModel(-1)
                     self.setEnemy(1)
-                    self.event = 'Бой!'
+                    self.event = 'Fight!'
                     pass
                 else:
-                    if (temp[0] == '1' or (temp[0] == '4' and not self.lightsoul.isalive) or (temp[0] == '5' and not self.darksoul.isalive) or (temp[0] == '6' and not self.graysoul.isalive) or (temp[0] == '7' and not self.soulking.isalive)):  # Перемещение
+                    if (temp[0] == '1' or (temp[0] == '4' and not self.lightsoul.isAlive) or (temp[0] == '5' and not self.darksoul.isAlive) or (temp[0] == '6' and not self.graysoul.isAlive) or (temp[0] == '7' and not self.soulking.isAlive)):
                         self.event = 'Moving: {0} --> {1}'.format(
                             self.currentHero.position, newCoords)
                         self.currentHero.position = newCoords
-                    # Переход на следующую локацию
+
                     elif (temp[0] == '3' and temp[1:] in self.currentHero.locations):
                         self.currentHero.position = self.currentLocation.setLocation(
                             int(temp[1:]))
@@ -442,7 +448,7 @@ class GameControl:
         elif (self.keypressed == 1):
             rad = self.inRadius(self.currentHero.position,
                                 self.currentEnemy.position)
-            if (keys[pygame.K_a] or keys[pygame.K_d] or keys[pygame.K_w] or keys[pygame.K_s]):  # Перемещение
+            if (keys[pygame.K_a] or keys[pygame.K_d] or keys[pygame.K_w] or keys[pygame.K_s]):
                 newCoords = self.currentHero.position
                 newCoords = (self.ternary(
                     keys[pygame.K_a], newCoords[0] - 1, newCoords[0]), newCoords[1])
@@ -552,7 +558,12 @@ class GameControl:
                     pass
                 elif (keys[pygame.K_1]):
                     pygame.display.iconify()
-                    os.system('cls')
+
+                    if (platform.system() == "Linux"):
+                        os.system('clear')
+                    elif (platform.system() == "Windows"):
+                        os.system("cls")
+
                     print('Upgrades:\n1)Health: {0} --> {1}, need {2}xp'.format(
                         self.currentHero.maxHealth, self.currentHero.maxHealth + 50, self.currentHero.xp_health))
                     print('2)Armor: {0} --> {1}, need {2}xp'.format(
@@ -610,34 +621,33 @@ class GameControl:
                 self.currentHero.position = self.currentLocation.unloadArena()
                 self.models.SetLocationModel(self.currentLocation.id)
                 self.currentHero.health = self.currentHero.maxHealth
-                # Получение опыта
                 XP = self.currentEnemy.speed * 10 + self.currentEnemy.armor + \
                     self.currentEnemy.damage + self.currentEnemy.maxHealth // 100
                 self.event = 'Win!'
                 self.edmg = 0
                 self.hdmg = 0
                 if (self.currentEnemy.name == 'Light Soul'):
-                    self.lightsoul.isalive = False
+                    self.lightsoul.isAlive = False
                     self.currentHero.soul += 1
                     XP *= 2.5
-                    if (not self.lightsoul.isalive and not self.darksoul.isalive):
+                    if (not self.lightsoul.isAlive and not self.darksoul.isAlive):
                         self.currentHero.locations.append('4')
                     pass
                 elif (self.currentEnemy.name == 'Dark Soul'):
-                    self.darksoul.isalive = False
+                    self.darksoul.isAlive = False
                     self.currentHero.soul += 1
                     XP *= 2.5
-                    if (not self.lightsoul.isalive and not self.darksoul.isalive):
+                    if (not self.lightsoul.isAlive and not self.darksoul.isAlive):
                         self.currentHero.locations.append('4')
                     pass
                 elif (self.currentEnemy.name == 'Gray Soul'):
-                    self.graysoul.isalive = False
+                    self.graysoul.isAlive = False
                     self.currentHero.soul += 1
                     self.currentHero.locations.append('6')
                     XP *= 3
                     pass
                 elif (self.currentEnemy.name == '2.0'):
-                    self.soulking.isalive = False
+                    self.soulking.isAlive = False
                     self.currentHero.soul += 1
                     XP *= 3.5
                     pass
@@ -712,29 +722,29 @@ class GameControl:
                     self.objects.append(
                         (self.models.locationModel, (0, 0)))  # Location
                     bpos = (0, 0)
-                    if (self.currentLocation.id == 5 and self.lightsoul.isalive):
+                    if (self.currentLocation.id == 5 and self.lightsoul.isAlive):
                         bpos = self.lightsoul.position[0] * \
                             64, self.lightsoul.position[1] * 64
                         self.objects.append(
                             (self.models.lightModel, bpos))  # Light Boss
-                    elif (self.currentLocation.id == 4 and self.graysoul.isalive):
+                    elif (self.currentLocation.id == 4 and self.graysoul.isAlive):
                         bpos = self.graysoul.position[0] * \
                             64, self.graysoul.position[1] * 64
                         self.objects.append(
                             (self.models.grayModel, bpos))  # Gray Boss
-                    elif (self.currentLocation.id == 7 and self.darksoul.isalive):
+                    elif (self.currentLocation.id == 7 and self.darksoul.isAlive):
                         bpos = self.darksoul.position[0] * \
                             64, self.darksoul.position[1] * 64
                         self.objects.append(
                             (self.models.darkModel, bpos))  # Dark Boss
-                    elif (self.currentLocation.id == 6 and self.soulking.isalive):
+                    elif (self.currentLocation.id == 6 and self.soulking.isAlive):
                         bpos = self.soulking.position[0] * \
                             64, self.soulking.position[1] * 64
                         self.objects.append(
                             (self.models.soulModel, bpos))  # King Boss
                         self.objects.append(
                             (pygame.image.load('Assets/Sprites/Princess.png'), (15 * 64, 5 * 64)))
-                    elif (self.currentLocation.id == 6 and not self.soulking.isalive):
+                    elif (self.currentLocation.id == 6 and not self.soulking.isAlive):
                         self.objects.append(
                             (pygame.image.load('Assets/Sprites/Princess.png'), (15 * 64, 5 * 64)))
 
