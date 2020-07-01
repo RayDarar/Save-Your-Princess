@@ -8,7 +8,7 @@ def main():
     res = ""
     while True:
         os.system("cls")
-        res = input("Save your Princess\n\n1)Новая игра (Удалит последнюю игру!)\n2)Продолжить\n3)Exit\n")
+        res = input("Save your Princess\n\n1)Новая игра (Действие удалит последнюю игру!)\n2)Продолжить\n3)Exit\n")
         if (res == '1'):
             control = GameControl.GameControl();
             control.setGameMode(0);
